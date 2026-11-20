@@ -15,7 +15,7 @@
 | 문서 21개·원문 목표·코드·링크 | 통과 | npm run check:docs |
 | 의존성 보안 | 통과 | npm audit: 취약점 0건. Sequelize의 uuid는 CJS 호환 11.1.1로 override 후 실제 ORM 검증 |
 | 로컬 Git 커밋 | 커밋에 포함되는 기록 | 새 main 저장소. 작성자 정보 미설정으로 Codex <codex@local.invalid> 명의를 사용 |
-| 원격 push | 대상 확인 필요 | 최초 작업 폴더와 상위 폴더에 Git 저장소·원격 없음. GitHub CLI 미로그인. 원격 URL·브랜치 질의에 대한 답변 대기 |
+| 원격 push | 통과 | https://github.com/samam0234/My_SolidJS_Study 의 main에 d893fdde1899ac4d7160e952ea0b2b6a4348d463 푸시, 원격 브랜치 확인 |
 | 외부 live 거래·실제 모델 추론 | 미실행 | 공급자 계정·키·모델이 제공되지 않아 mock·HTTP 어댑터 계약만 검증 |
 | 외부 배포·GitHub Actions 실제 실행 | 미실행 | 원격 저장소·배포 호스트·Secrets 미지정 |
 
