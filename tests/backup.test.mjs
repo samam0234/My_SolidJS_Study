@@ -1,0 +1,26 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, rm, readdir } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { resolve, join, sep } from 'node:path';
+import { promisify } from 'node:util';
+import { execFile } from 'node:child_process';
+import { openStore } from '../server/store.mjs';
+const exec = promisify(execFile);
+test('실제 SQLite 백업·빈 DB 복원·세션 제외·덮어쓰기 거절', async t => {
+  const parent = resolve(tmpdir()); const directory = await mkdtemp(join(parent, 'solid-study-backup-'));
+  assert.ok(resolve(directory).startsWith(parent + sep));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const original = join(directory, 'original.sqlite'); const restored = join(directory, 'restored.sqlite');
+  const before = await openStore({ path: original });
+  await before.put('posts', { id: 1, title: '복원 글', body: '한글' });
+  await before.put('sessions', { id: 1, tokenHash: 'old-session' }); await before.close();
+  const options = { cwd: directory, env: { ...process.env, DB_DRIVER: 'sqlite', DB_ACCESS: 'native', SQLITE_PATH: original } };
+  await exec(process.execPath, [resolve('scripts/backup.mjs')], options);
+  const file = join(directory, 'backups', (await readdir(join(directory, 'backups')))[0]);
+  options.env.SQLITE_PATH = restored;
+  await exec(process.execPath, [resolve('scripts/restore.mjs'), file], options);
+  const after = await openStore({ path: restored });
+  assert.equal((await after.all('posts'))[0].title, '복원 글'); assert.deepEqual(await after.all('sessions'), []); await after.close();
+  await assert.rejects(exec(process.execPath, [resolve('scripts/restore.mjs'), file], options), /대상 DB가 비어 있지 않습니다/);
+});

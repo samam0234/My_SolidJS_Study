@@ -1,0 +1,59 @@
+services:
+  app:
+    build: .
+    ports: ["127.0.0.1:3000:3000"]
+    environment:
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:3000}
+      CORS_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:3000}
+      DB_DRIVER: ${DB_DRIVER:-sqlite}
+      DB_ACCESS: ${DB_ACCESS:-native}
+      DATABASE_URL: ${DATABASE_URL:-}
+      AI_PROVIDER: ${AI_PROVIDER:-mock}
+      AI_MODEL: ${AI_MODEL:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+      INTEGRATIONS_MODE: ${INTEGRATIONS_MODE:-mock}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_PRICE_ID: ${STRIPE_PRICE_ID:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+    volumes: ["app-data:/app/data"]
+    restart: unless-stopped
+  postgres:
+    image: postgres:17
+    profiles: ["postgres"]
+    environment:
+      POSTGRES_USER: study
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-local-study-password}
+      POSTGRES_DB: study
+    ports: ["127.0.0.1:${POSTGRES_PORT:-15432}:5432"]
+    volumes: ["pg-data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U study"]
+      interval: 5s
+      retries: 15
+  mariadb:
+    image: mariadb:11.4
+    profiles: ["mariadb"]
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD:-local-study-password}
+      MARIADB_DATABASE: study
+      MARIADB_USER: study
+      MARIADB_PASSWORD: ${DB_PASSWORD:-local-study-password}
+    ports: ["127.0.0.1:${MARIADB_PORT:-13306}:3306"]
+    volumes: ["maria-data:/var/lib/mysql"]
+  mongodb:
+    image: mongo:8
+    profiles: ["mongodb"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: study
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD:-local-study-password}
+    ports: ["127.0.0.1:${MONGODB_PORT:-27027}:27017"]
+    volumes: ["mongo-data:/data/db"]
+volumes:
+  app-data:
+  pg-data:
+  maria-data:
+  mongo-data:

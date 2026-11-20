@@ -1,0 +1,54 @@
+{
+  "name": "solidjs-study-board",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.14.0 <25"
+  },
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "node --env-file-if-exists=.env --watch server/index.mjs",
+    "dev:web": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "build:basic": "tsc --noEmit && vite build --mode basic",
+    "start:basic": "node --env-file-if-exists=.env server/basic.mjs",
+    "start": "node --env-file-if-exists=.env server/index.mjs",
+    "test": "node --test --test-concurrency=1 tests/*.test.mjs",
+    "test:ui": "vitest run",
+    "test:e2e": "playwright test",
+    "check:docs": "python scripts/check_docs.py",
+    "docs:generate": "python scripts/generate_docs.py",
+    "mcp:client": "node --env-file-if-exists=.env server/mcp-client.mjs",
+    "backup": "node --env-file-if-exists=.env scripts/backup.mjs",
+    "restore": "node --env-file-if-exists=.env scripts/restore.mjs",
+    "test:db": "node --env-file-if-exists=.env --test tests/db.integration.mjs"
+  },
+  "overrides": { "sequelize": { "uuid": "11.1.1" } },
+  "dependencies": {
+    "@kobalte/core": "0.13.14",
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "@modular-forms/solid": "0.25.1",
+    "@solidjs/router": "0.15.4",
+    "mariadb": "^3.4.5",
+    "mongodb": "^6.20.0",
+    "mongoose": "^8.24.10",
+    "pg": "^8.16.3",
+    "sequelize": "^6.37.8",
+    "solid-js": "1.9.20",
+    "ws": "^8.18.3",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@solidjs/testing-library": "^0.8.10",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@types/node": "^24.10.1",
+    "concurrently": "^9.2.1",
+    "jsdom": "^26.1.0",
+    "typescript": "^5.9.3",
+    "vite": "7.3.8",
+    "vite-plugin-solid": "2.11.17",
+    "vitest": "^5.1.1"
+  }
+}
