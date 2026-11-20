@@ -16,8 +16,10 @@
 | 의존성 보안 | 통과 | npm audit: 취약점 0건. Sequelize의 uuid는 CJS 호환 11.1.1로 override 후 실제 ORM 검증 |
 | 로컬 Git 커밋 | 커밋에 포함되는 기록 | 새 main 저장소. 작성자 정보 미설정으로 Codex <codex@local.invalid> 명의를 사용 |
 | 원격 push | 통과 | https://github.com/samam0234/My_SolidJS_Study 의 main에 d893fdde1899ac4d7160e952ea0b2b6a4348d463 푸시, 원격 브랜치 확인 |
-| 외부 live 거래·실제 모델 추론 | 미실행 | 공급자 계정·키·모델이 제공되지 않아 mock·HTTP 어댑터 계약만 검증 |
-| 외부 배포·GitHub Actions 실제 실행 | 미실행 | 원격 저장소·배포 호스트·Secrets 미지정 |
+| 실제 모델 추론 | 통과 | 로컬 Ollama gemma4:12b로 문서 발췌 검색→SSE→답변·인용→사용량·질문 이력 검증. 실행: `node --test tests/ollama.live.mjs` |
+| 외부 live 결제·메일 | 미실행 | 테스트 계정·서버 키·가격 ID·발신/수신 주소 필요. mock 및 HTTP 어댑터 계약은 검증 |
+| GitHub Actions | 통과 | [0b23a2d 실행 결과](https://github.com/samam0234/My_SolidJS_Study/actions/runs/44741022080): success |
+| 외부 배포 | 미실행 | Vercel 연결의 팀 접근이 403으로 거부되어 팀 접근 승인 대기. 영속 DB·상시 Node 서버·WebSocket에 적합한 실행 환경도 확인 필요 |
 
 코드 구현과 운영 검증을 구분한다. 미실행 작업은 완료로 표시하지 않는다.
 
